@@ -67,6 +67,11 @@
             return position.Column == Column && position.Row == Row;
         }
 
+        public override string ToString()
+        {
+            return Column.ToString() + Row.ToString();
+        }
+
         #endregion
     }
 }
