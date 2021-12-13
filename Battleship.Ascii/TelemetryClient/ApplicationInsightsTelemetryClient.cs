@@ -16,7 +16,7 @@ namespace Battleship.Ascii.TelemetryClient
 
         public ApplicationInsightsTelemetryClient()
         {
-            TelemetryConfiguration config = TelemetryConfiguration.CreateFromConfiguration(File.ReadAllText("ApplicationInsights.config")); // Reads ApplicationInsights.config file if present
+            TelemetryConfiguration config = TelemetryConfiguration.CreateFromConfiguration(File.ReadAllText(Path.Combine(AppContext.BaseDirectory,"ApplicationInsights.config"))); // Reads ApplicationInsights.config file if present
             telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient(config);
         }
         public void TrackEvent(string eventName)
