@@ -1,0 +1,33 @@
+image: mcr.microsoft.com/dotnet/sdk:5.0
+
+stages: 
+  - test
+  - build
+  - analyze
+
+unit test:
+  stage: test
+  script:
+  - dotnet test
+
+build: 
+  stage: build
+  script: 
+    - dotnet build --output ./build/ ./Battleship.Ascii/Battleship.Ascii.csproj
+    # - dotnet publish -r win10-x64 --output ./build/ ./Battleship.Ascii/Battleship.Ascii.csproj => Uncomment and adapt if you want to create a platform-dependent build for your operating system
+  artifacts:
+    paths:
+      - ./build/
+
+sonar:
+  stage: analyze
+  before_script: 
+  - dotnet tool install --global dotnet-sonarscanner
+  - export PATH="$PATH:/root/.dotnet/tools"
+  - mkdir -p /usr/share/man/man1/
+  - apt-get update && apt-get install -y default-jdk
+  script:
+  - dotnet sonarscanner begin /k:"$$$SONAR_PROJECT_KEY$$$" /d:sonar.host.url=$$$SONAR_URL$$$
+  - dotnet build
+  - dotnet sonarscanner end
+

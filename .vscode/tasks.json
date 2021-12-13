@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Battleship.Ascii/Battleship.Ascii.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
