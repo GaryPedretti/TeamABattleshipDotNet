@@ -19,7 +19,7 @@ namespace Battleship.Ascii
         static void Main()
         {
             telemetryClient = new ApplicationInsightsTelemetryClient();
-            telemetryClient.TrackEvent("ApplicationStarted");
+            telemetryClient.TrackEvent("ApplicationStarted", new Dictionary<string, string> { { "Technology", ".NET"} });
 
             try
             {
