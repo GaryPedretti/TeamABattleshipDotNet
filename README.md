@@ -43,4 +43,8 @@ If you want to run tests within VSCode, you can install the [.NET Core Test Expl
 **/*[Test|ATDD]*/*.csproj
 ```
 
+# Telemetry data
+This application is collecting telemetry data with Microsoft Application Insights.
+For more details see https://docs.microsoft.com/en-us/azure/azure-monitor/app/console.
 
+To send the telemetry data to a specific instance of Application Insights, the connection string has to be adjusted in ApplicationInsights.config.
