@@ -46,6 +46,10 @@ Prerequisites:
 * Visual Studio Code
 
 
+## Running within GitHub CodeSpaces
+You can also use GitHub CodeSpaces to run the development environment completely in a browser. 
+
+See [Introduction to CodeSpaces](https://docs.github.com/en/codespaces) for more information about using GitHub Codespaces.
 
 # Execute Tests
 You can run tests on the console by using
