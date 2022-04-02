@@ -48,8 +48,8 @@ namespace Battleship.GameController.ATDD
         public static void FeatureSetup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext testContext)
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "", "IsShipValid", "\tIn order to avoid cheeting\r\n\tAs a player\r\n\tI want to be notified if my ship has " +
-                    "a invalid placement", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "", "IsShipValid", "\tIn order to avoid cheeting\n\tAs a player\n\tI want to be notified if my ship has a " +
+                    "invalid placement", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
