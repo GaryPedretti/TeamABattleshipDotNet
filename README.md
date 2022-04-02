@@ -32,6 +32,21 @@ This starts a new container and maps your current folder on your host machine as
 dotnet run 
 ```
 
+
+## Running within a DevContainer
+DevContainers are a way to run your development environment inside of an Docker container. 
+The container contains all frameworks, tools etc. to develop and run the application.
+If you open the folder of this repo in VS Code, it asks if you want to run this insiede a DevContainer. 
+If you agree, VS Code will run inside this container with the needed extensions and frameworks.
+
+See [Developing inside a Container](https://code.visualstudio.com/docs/remote/containers) for more information on local container development with VS Code.
+
+Prerequisites:
+* Docker
+* Visual Studio Code
+
+
+
 # Execute Tests
 You can run tests on the console by using
 ```bash
