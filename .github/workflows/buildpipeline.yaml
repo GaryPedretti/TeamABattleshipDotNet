@@ -33,7 +33,8 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --logger "trx;LogFileName=test-results.trx" --collect "Code Coverage"
    
-    - uses: dorny/test-reporter@v1
+    - name: Create Test Report
+      uses: dorny/test-reporter@v1
       with:
         name: Unit Tests                  # Name of the check run which will be created
         path: '**/*.trx'                     # Path to test results (inside artifact .zip)
