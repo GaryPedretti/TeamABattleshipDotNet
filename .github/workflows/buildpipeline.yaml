@@ -31,17 +31,13 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
-      
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: unit tests
-        uses: zyborg/dotnet-tests-report@v1
-        with:
-          project_path: Battleship.GameController.Tests
-          report_name:  Battleship.GameController.Tests
-          report_title: Battleship.GameController.Tests
+      run: dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=test-results.trx"
+   
+    - uses: dorny/test-reporter@v1
+      with:
+        artifact: test-results            # artifact name
+        name: Unit Tests                  # Name of the check run which will be created
+        path: '*.trx'                     # Path to test results (inside artifact .zip)
+        reporter: dotnet-trx              # Format of test results   
+  
           
