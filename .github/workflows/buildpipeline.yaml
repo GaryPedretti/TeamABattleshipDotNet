@@ -12,7 +12,7 @@ env:
   DOTNET_VERSION: '6.0' # The .NET SDK version to use
 
 jobs:
-  build-and-test:
+  build:
 
     name: build-and-test
     runs-on: ubuntu-latest
@@ -34,6 +34,7 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
       
   test:
+    needs: build
     runs-on: ubuntu-latest
     
     steps:
