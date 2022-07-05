@@ -31,7 +31,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     
     - name: Test
-      run: dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=test-results.trx"
+      run: dotnet test --no-restore --logger "trx;LogFileName=test-results.trx" --collect "Code Coverage"
    
     - uses: dorny/test-reporter@v1
       with:
