@@ -1,6 +1,5 @@
 ﻿using Battleship.GameController.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using TechTalk.SpecFlow;
 
 namespace Battleship.GameController.ATDD
@@ -8,10 +7,17 @@ namespace Battleship.GameController.ATDD
     [Binding]
     public class IsShipValidSteps
     {
+        private readonly ScenarioContext _scenarioContext;
+
+        public IsShipValidSteps(ScenarioContext scenarioContext)
+        {
+            _scenarioContext = scenarioContext;
+        }
+
         private bool result { get; set; }
         private Ship ship; 
 
-        [Given]
+        [Given(@"I have a (.*) ship with (.*) positions")]
         public void GivenIHaveA_P0_ShipWith_P1_Positions(int size, int positions)
         {
             ship = new Ship();
@@ -22,13 +28,13 @@ namespace Battleship.GameController.ATDD
             }
         }
 
-        [When]
+        [When(@"I check if the ship is valid")]
         public void WhenICheckIfTheShipIsValid()
         {
             result = GameController.IsShipValid(ship);
         }
 
-        [Then]
+        [Then(@"the result should be (.*)")]
         public void ThenTheResultShouldBe_P0(bool expected)
         {
             Assert.AreEqual(expected, result);
