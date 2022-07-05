@@ -1,5 +1,7 @@
 [![Build status](https://dev.azure.com/APS-SD-Stewards/APS-SD/_apis/build/status/proscrumdev.battleship-dotnetcore-CI)](https://dev.azure.com/APS-SD-Stewards/APS-SD/_build/latest?definitionId=28)
 
+[![build and test dotnet](https://github.com/proscrumdev/battleship-dotnet/actions/workflows/buildpipeline.yaml/badge.svg)](https://github.com/proscrumdev/battleship-dotnet/actions/workflows/buildpipeline.yaml)
+
 # Battleship .NET
 A simple game of Battleship, written in C# based on .NET 6. The purpose of this repository is to serve as an entry point into coding exercises and it was especially created for scrum.orgs Applying Professional Scrum for Software Development course (www.scrum.org/apssd). The code in this repository is unfinished by design.
 
