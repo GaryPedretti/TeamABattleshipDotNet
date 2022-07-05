@@ -32,3 +32,15 @@ jobs:
     
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+      
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: unit tests
+        uses: zyborg/dotnet-tests-report@v1
+        with:
+          project_path: Battleship.GameController.Tests
+          report_name:  Battleship.GameController.Tests
+          report_title: Battleship.GameController.Tests
+          
