@@ -23,22 +23,6 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)
   displayName: 'Build .NET 6 Application'
 
-# - task: DotNetCoreCLI@2
-#   displayName: Restore
-#   inputs:
-#     command: restore
-#     projects: '**/*.sln'    
-#     version: $(dotNetVersion)
-#     includePreviewVersions: true
-
-# - task: DotNetCoreCLI@2
-#   displayName: Build
-#   inputs:
-#     projects: '**/*.sln'
-#     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
-#     version: $(dotNetVersion)
-#     includePreviewVersions: true
-
 # You can build a platform based executeable with the following task instead of the above one
 # Make sure you set the right platform with the -r parameter
 #- task: DotNetCoreCLI@2
