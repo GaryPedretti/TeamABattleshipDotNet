@@ -20,7 +20,7 @@ steps:
   inputs:
     version: $(dotNetVersion)
     includePreviewVersions: true
-- script: dotnet build --configuration $(buildConfiguration)
+- script: dotnet build --configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)
   displayName: 'Build .NET 6 Application'
 
 # - task: DotNetCoreCLI@2
