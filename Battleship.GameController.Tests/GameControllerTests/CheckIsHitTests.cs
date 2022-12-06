@@ -60,6 +60,29 @@
             Assert.IsFalse(result);
         }
 
+        [TestMethod]
+        public void ShouldNotSinkTheShip()
+        {
+            Ship s = new Ship();
+            s.AddPosition("A1");
+            s.AddPosition("A2");
+
+            var result = GameController.CheckIsHit(new [] { s }, new Position(Letters.A, 1));
+            Assert.IsFalse(s.IsSunk());
+        }
+
+        [TestMethod]
+        public void ShouldSinkTheShip()
+        {
+            Ship s = new Ship();
+            s.AddPosition("A1");
+            s.AddPosition("A2");
+
+             GameController.CheckIsHit(new [] { s }, new Position(Letters.A, 1));
+             GameController.CheckIsHit(new [] { s }, new Position(Letters.A, 2));
+            Assert.IsTrue(s.IsSunk());
+        }
+
         /// <summary>
         /// The throw exception if positstion is null.
         /// </summary>
