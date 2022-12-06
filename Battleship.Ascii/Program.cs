@@ -94,6 +94,8 @@ namespace Battleship.Ascii
                 }
 
                 Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
+                Console.WriteLine("Enemy Ships Sunl");
+                PrintShipsSunk(enemyFleet);
 
                 position = GetRandomPosition();
                 isHit = GameController.CheckIsHit(myFleet, position);
@@ -114,6 +116,8 @@ namespace Battleship.Ascii
                     Console.WriteLine(@"                   \  \   /  /");
 
                 }
+                Console.WriteLine("My Ships Sunk");
+                PrintShipsSunk(myFleet);
             }
             while (true);
         }
@@ -138,9 +142,9 @@ namespace Battleship.Ascii
 
         private static void InitializeGame()
         {
-            InitializeMyFleet();
+            myFleet = InitializeEnemyFleet();
 
-            InitializeEnemyFleet();
+            enemyFleet = InitializeEnemyFleet();
         }
 
         private static void InitializeMyFleet()
@@ -163,31 +167,47 @@ namespace Battleship.Ascii
             }
         }
 
-        private static void InitializeEnemyFleet()
+        private static List<Ship> InitializeEnemyFleet()
         {
-            enemyFleet = GameController.InitializeShips().ToList();
+            var fleet = GameController.InitializeShips().ToList();
 
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 4 });
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 5 });
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 6 });
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 7 });
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 8 });
+            fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 4 });
+            fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 5 });
+            fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 6 });
+            fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 7 });
+            fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 8 });
 
-            enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 6 });
-            enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 7 });
-            enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 8 });
-            enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 9 });
+            fleet[1].Positions.Add(new Position { Column = Letters.E, Row = 6 });
+            fleet[1].Positions.Add(new Position { Column = Letters.E, Row = 7 });
+            fleet[1].Positions.Add(new Position { Column = Letters.E, Row = 8 });
+            fleet[1].Positions.Add(new Position { Column = Letters.E, Row = 9 });
 
-            enemyFleet[2].Positions.Add(new Position { Column = Letters.A, Row = 3 });
-            enemyFleet[2].Positions.Add(new Position { Column = Letters.B, Row = 3 });
-            enemyFleet[2].Positions.Add(new Position { Column = Letters.C, Row = 3 });
+            fleet[2].Positions.Add(new Position { Column = Letters.A, Row = 3 });
+            fleet[2].Positions.Add(new Position { Column = Letters.B, Row = 3 });
+            fleet[2].Positions.Add(new Position { Column = Letters.C, Row = 3 });
 
-            enemyFleet[3].Positions.Add(new Position { Column = Letters.F, Row = 8 });
-            enemyFleet[3].Positions.Add(new Position { Column = Letters.G, Row = 8 });
-            enemyFleet[3].Positions.Add(new Position { Column = Letters.H, Row = 8 });
+            fleet[3].Positions.Add(new Position { Column = Letters.F, Row = 8 });
+            fleet[3].Positions.Add(new Position { Column = Letters.G, Row = 8 });
+            fleet[3].Positions.Add(new Position { Column = Letters.H, Row = 8 });
 
-            enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
-            enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
+            fleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
+            fleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
+
+            return fleet;
         }
+
+        public static void PrintShipsSunk(List<Ship> fleet) {
+            var sunk = fleet.Where(x => x.IsSunk()).ToList();
+            if(sunk.Count == 0) {
+                Console.WriteLine("None");
+            }
+            foreach(var ship in sunk) {
+                Console.WriteLine(ship.Name);
+            }
+
+
+        }
+
     }
+
 }
