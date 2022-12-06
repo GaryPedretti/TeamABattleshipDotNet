@@ -93,19 +93,30 @@ namespace Battleship.Ascii
                     Console.WriteLine(@"                   \  \   /  /");
                 }
 
-
-                Console.ForegroundColor= ConsoleColor.Blue;
-                Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss,",Console.ForegroundColor);
-                Console.WriteLine("Enemy Ships Sunl");
-
-                PrintShipsSunk(enemyFleet);
+                
+                if(isHit)
+                {
+                    Console.ForegroundColor=ConsoleColor.Red;
+                    Console.WriteLine("Yeah ! Nice hit !", Console.ForegroundColor);
+                }
+                else
+                {
+                    Console.ForegroundColor=ConsoleColor.Blue;
+                    Console.WriteLine("Miss", Console.ForegroundColor);
+                }
                 Console.ForegroundColor=ConsoleColor.White;
+                Console.WriteLine("Enemy Ships Sunk");
+                PrintShipsSunk(enemyFleet);
+                Console.WriteLine("Enemy Ships Remaining");
+                PrintShipsRemaining(enemyFleet);
 
                 position = GetRandomPosition();
                 isHit = GameController.CheckIsHit(myFleet, position);
                 telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
-                Console.ForegroundColor=ConsoleColor.Red;
-                Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !": "missed",Console.ForegroundColor);
+                if(isHit)
+                    Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, "has hit your ship !",ConsoleColor.Red);
+                else
+                    Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row,  "missed", ConsoleColor.Blue);
                 if (isHit)
                 {
                     Console.Beep();
@@ -122,6 +133,8 @@ namespace Battleship.Ascii
                 }
                 Console.WriteLine("My Ships Sunk");
                 PrintShipsSunk(myFleet);
+                Console.WriteLine("My Ships Remaining");
+                PrintShipsRemaining(myFleet);
             }
             while (true);
         }
@@ -208,8 +221,16 @@ namespace Battleship.Ascii
             foreach(var ship in sunk) {
                 Console.WriteLine(ship.Name);
             }
+        }
 
-
+            public static void PrintShipsRemaining(List<Ship> fleet) {
+            var sunk = fleet.Where(x => !x.IsSunk()).ToList();
+            if(sunk.Count == 0) {
+                Console.WriteLine("None");
+            }
+            foreach(var ship in sunk) {
+                Console.WriteLine(ship.Name);
+            }
         }
 
     }
