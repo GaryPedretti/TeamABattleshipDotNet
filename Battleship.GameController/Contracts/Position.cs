@@ -5,6 +5,8 @@
     /// </summary>
     public class Position
     {
+        public bool IsHit { get; set; }
+        
         #region Constructors and Destructors
 
         /// <summary>
