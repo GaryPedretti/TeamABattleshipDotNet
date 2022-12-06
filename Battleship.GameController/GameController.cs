@@ -47,6 +47,7 @@ namespace Battleship.GameController
                 {
                     if (position.Equals(shot))
                     {
+                        position.IsHit = true;
                         return true;
                     }
                 }
