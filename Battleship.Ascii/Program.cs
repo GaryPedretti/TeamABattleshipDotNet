@@ -94,7 +94,7 @@ namespace Battleship.Ascii
                 }
 
                 Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
-                Console.WriteLine("Enemy Ships Sunl");
+                Console.WriteLine("Enemy Ships Sunk");
                 PrintShipsSunk(enemyFleet);
 
                 position = GetRandomPosition();
