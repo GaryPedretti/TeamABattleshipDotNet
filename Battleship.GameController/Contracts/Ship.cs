@@ -11,6 +11,10 @@ namespace Battleship.GameController.Contracts
     /// </summary>
     public class Ship
     {
+        public bool IsSunk() 
+        {
+            return false;
+        }
         private bool isPlaced;
 
         #region Constructors and Destructors
