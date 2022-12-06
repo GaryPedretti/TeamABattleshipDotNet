@@ -93,15 +93,19 @@ namespace Battleship.Ascii
                     Console.WriteLine(@"                   \  \   /  /");
                 }
 
-                Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
-                Console.WriteLine("Enemy Ships Sunk");
+
+                Console.ForegroundColor= ConsoleColor.Blue;
+                Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss,",Console.ForegroundColor);
+                Console.WriteLine("Enemy Ships Sunl");
+
                 PrintShipsSunk(enemyFleet);
+                Console.ForegroundColor=ConsoleColor.White;
 
                 position = GetRandomPosition();
                 isHit = GameController.CheckIsHit(myFleet, position);
                 telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
-                Console.WriteLine();
-                Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !" : "missed");
+                Console.ForegroundColor=ConsoleColor.Red;
+                Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !": "missed",Console.ForegroundColor);
                 if (isHit)
                 {
                     Console.Beep();
