@@ -13,7 +13,7 @@ namespace Battleship.GameController.Contracts
     {
         public bool IsSunk() 
         {
-            return false;
+            return Positions.All(x => x.IsHit == true);
         }
         private bool isPlaced;
 
