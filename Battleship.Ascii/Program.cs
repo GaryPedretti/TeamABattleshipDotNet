@@ -116,13 +116,13 @@ namespace Battleship.Ascii
                 telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
                 if(isHit)
                 {
-                    Console.ForegroundColor=ConsoleColor.Red;
-                    Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, "has hit your ship !",Console.ForegroundColor);
+                    
+                    WriteLine(ConsoleColor.Red,"Computer shot in {0}{1} and {2}", position.Column, position.Row, "has hit your ship !");
                 }
                 else
                 {
-                    Console.ForegroundColor=ConsoleColor.Blue;
-                    Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row,  "missed", Console.ForegroundColor);
+                    
+                    WriteLine(ConsoleColor.Blue,"Computer shot in {0}{1} and {2}", position.Column, position.Row,  "missed");
                 }
                
                 if (isHit)
@@ -244,7 +244,7 @@ namespace Battleship.Ascii
                 return true;
             }
             foreach(var ship in sunk) {
-                Console.WriteLine(ship.Name);
+                WriteLine(ConsoleColor.Red, ship.Name);
             }
             Console.WriteLine("");
             return false;
@@ -258,7 +258,7 @@ namespace Battleship.Ascii
                 Console.WriteLine("None");
             }
             foreach(var ship in sunk) {
-                Console.WriteLine(ship.Name);
+                 WriteLine(ConsoleColor.Blue, ship.Name);
             }
             Console.WriteLine("");
         }
