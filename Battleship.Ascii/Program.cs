@@ -105,10 +105,8 @@ namespace Battleship.Ascii
                     WriteLine(ConsoleColor.Blue,"Miss"); 
                 }
                 Console.ForegroundColor=ConsoleColor.White;
-                Console.WriteLine("Enemy Ships Sunk");
-                PrintShipsSunk(enemyFleet);
-                Console.WriteLine("Enemy Ships Remaining");
-                PrintShipsRemaining(enemyFleet);
+                PrintShipsSunk(enemyFleet, "Enemy Ships Sunk");
+                PrintShipsRemaining(enemyFleet, "Enemy Ships Remaining");
 
                 position = GetRandomPosition();
                 isHit = GameController.CheckIsHit(myFleet, position);
@@ -139,10 +137,8 @@ namespace Battleship.Ascii
 
                 }
                 Console.ForegroundColor=ConsoleColor.White;
-                Console.WriteLine("My Ships Sunk");
-                PrintShipsSunk(myFleet);
-                Console.WriteLine("My Ships Remaining");
-                PrintShipsRemaining(myFleet);
+                PrintShipsSunk(myFleet, "My Ships Sunk");
+                PrintShipsRemaining(myFleet, "My Ships Remaining");
             }
             while (true);
         }
@@ -230,17 +226,27 @@ namespace Battleship.Ascii
             return fleet;
         }
 
-        public static void PrintShipsSunk(List<Ship> fleet) {
+        public static bool  PrintShipsSunk(List<Ship> fleet, string label = "") {
+            Console.WriteLine("");
+            Console.WriteLine(label);
             var sunk = fleet.Where(x => x.IsSunk()).ToList();
             if(sunk.Count == 0) {
                 Console.WriteLine("None");
             }
+            if(sunk.Count==fleet.Count) {
+                PrintFinalMessage(fleet);
+                return true;
+            }
             foreach(var ship in sunk) {
                 Console.WriteLine(ship.Name);
             }
+            Console.WriteLine("");
+            return false;
         }
 
-            public static void PrintShipsRemaining(List<Ship> fleet) {
+        public static void PrintShipsRemaining(List<Ship> fleet, string label = "") {
+            Console.WriteLine("");
+            Console.WriteLine(label);
             var sunk = fleet.Where(x => !x.IsSunk()).ToList();
             if(sunk.Count == 0) {
                 Console.WriteLine("None");
@@ -248,6 +254,21 @@ namespace Battleship.Ascii
             foreach(var ship in sunk) {
                 Console.WriteLine(ship.Name);
             }
+            Console.WriteLine("");
+        }
+        
+
+        public static void PrintFinalMessage(List<Ship> fleet) {
+            Console.WriteLine("");
+            Console.WriteLine("");
+            if(fleet == enemyFleet) {
+                Console.WriteLine("Congratulation! You have wone the game!");
+            }
+            else {
+                Console.WriteLine("You have been sent to Davey Jones's locker!");
+            }
+            Console.WriteLine("");
+            Console.WriteLine("");
         }
 
     }
