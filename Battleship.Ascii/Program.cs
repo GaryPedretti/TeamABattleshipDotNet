@@ -71,6 +71,7 @@ namespace Battleship.Ascii
             Console.WriteLine(@"   \    \_/");
             Console.WriteLine(@"    """"""""");
 
+            bool done = false;
             do
             {
                 Console.WriteLine();
@@ -105,7 +106,9 @@ namespace Battleship.Ascii
                     WriteLine(ConsoleColor.Blue,"Miss"); 
                 }
                 Console.ForegroundColor=ConsoleColor.White;
-                PrintShipsSunk(enemyFleet, "Enemy Ships Sunk");
+                done = PrintShipsSunk(enemyFleet, "Enemy Ships Sunk");
+                if(done)
+                    break;
                 PrintShipsRemaining(enemyFleet, "Enemy Ships Remaining");
 
                 position = GetRandomPosition();
@@ -137,10 +140,12 @@ namespace Battleship.Ascii
 
                 }
                 Console.ForegroundColor=ConsoleColor.White;
-                PrintShipsSunk(myFleet, "My Ships Sunk");
+                done = PrintShipsSunk(myFleet, "My Ships Sunk");
+                if(done)
+                    break;
                 PrintShipsRemaining(myFleet, "My Ships Remaining");
             }
-            while (true);
+            while (!done);
         }
         public static void WriteLine(System.ConsoleColor color, string format, params object[] args)
         {
@@ -222,6 +227,7 @@ namespace Battleship.Ascii
 
             fleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
             fleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
+            
 
             return fleet;
         }
