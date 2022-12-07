@@ -212,7 +212,7 @@ namespace Battleship.Ascii
         {
             var fleet = GameController.InitializeShips().ToList();
 
-            fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 4 });
+    /*        fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 4 });
             fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 5 });
             fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 6 });
             fleet[0].Positions.Add(new Position { Column = Letters.B, Row = 7 });
@@ -230,6 +230,7 @@ namespace Battleship.Ascii
             fleet[3].Positions.Add(new Position { Column = Letters.F, Row = 8 });
             fleet[3].Positions.Add(new Position { Column = Letters.G, Row = 8 });
             fleet[3].Positions.Add(new Position { Column = Letters.H, Row = 8 });
+            */
 
             fleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
             fleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
