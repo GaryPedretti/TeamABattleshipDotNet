@@ -82,16 +82,7 @@ namespace Battleship.Ascii
                 telemetryClient.TrackEvent("Player_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
                 if (isHit)
                 {
-                    Console.Beep();
-
-                    Console.WriteLine(@"                \         .  ./");
-                    Console.WriteLine(@"              \      .:"";'.:..""   /");
-                    Console.WriteLine(@"                  (M^^.^~~:.'"").");
-                    Console.WriteLine(@"            -   (/  .    . . \ \)  -");
-                    Console.WriteLine(@"               ((| :. ~ ^  :. .|))");
-                    Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
-                    Console.WriteLine(@"                 -\  \     /  /-");
-                    Console.WriteLine(@"                   \  \   /  /");
+                   printhit();
                 }
 
                 
@@ -127,25 +118,28 @@ namespace Battleship.Ascii
                
                 if (isHit)
                 {
-                    Console.Beep();
-
-                    Console.WriteLine(@"                \         .  ./");
-                    Console.WriteLine(@"              \      .:"";'.:..""   /");
-                    Console.WriteLine(@"                  (M^^.^~~:.'"").");
-                    Console.WriteLine(@"            -   (/  .    . . \ \)  -");
-                    Console.WriteLine(@"               ((| :. ~ ^  :. .|))");
-                    Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
-                    Console.WriteLine(@"                 -\  \     /  /-");
-                    Console.WriteLine(@"                   \  \   /  /");
-
+                    printhit();
                 }
-                Console.ForegroundColor=ConsoleColor.White;
+                
                 done = PrintShipsSunk(myFleet, "My Ships Sunk");
                 if(done)
                     break;
                 PrintShipsRemaining(myFleet, "My Ships Remaining");
             }
             while (!done);
+        }
+        public static void printhit()
+        {
+               Console.Beep();
+                    WriteLine(ConsoleColor.Red,@"                \        .  ./");
+                    WriteLine(ConsoleColor.Red,@"              \      .:"";'.:..""   /");
+                    WriteLine(ConsoleColor.Red,@"                  (M^^.^~~:.'"").");
+                    WriteLine(ConsoleColor.Red,@"            -   (/  .    . . \ \)  -");
+                    WriteLine(ConsoleColor.Red,@"               ((| :. ~ ^  :. .|))");
+                    WriteLine(ConsoleColor.Red,@"            -   (\- |  \ /  |  /)  -");
+                    WriteLine(ConsoleColor.Red,@"                 -\  \     /  /-");
+                    WriteLine(ConsoleColor.Red,@"                   \  \   /  /");
+
         }
         public static void WriteLine(System.ConsoleColor color, string format, params object[] args)
         {
