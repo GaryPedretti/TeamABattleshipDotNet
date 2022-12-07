@@ -72,12 +72,20 @@ namespace Battleship.Ascii
             Console.WriteLine(@"    """"""""");
 
             bool done = false;
+            Position position;
             do
             {
                 Console.WriteLine();
                 Console.WriteLine("Player, it's your turn");
                 Console.WriteLine("Enter coordinates for your shot :");
-                var position = ParsePosition(Console.ReadLine());                
+                try {
+                    position = ParsePosition(Console.ReadLine());  
+                }   
+                catch(Exception) {
+                    Console.WriteLine();
+                    Console.WriteLine("Your show was out of range. Try again.");
+                    continue;
+                }           
                 var isHit = GameController.CheckIsHit(enemyFleet, position);
                 telemetryClient.TrackEvent("Player_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
                 if (isHit)
@@ -155,6 +163,10 @@ namespace Battleship.Ascii
         {
             var letter = (Letters)Enum.Parse(typeof(Letters), input.ToUpper().Substring(0, 1));
             var number = int.Parse(input.Substring(1, 1));
+            if(letter < Letters.A || letter>Letters.H || number < 1 || number > 8) 
+            {
+                throw new Exception();
+            }
             return new Position(letter, number);
         }
 
