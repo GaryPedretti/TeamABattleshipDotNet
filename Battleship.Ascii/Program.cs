@@ -83,7 +83,7 @@ namespace Battleship.Ascii
                 }   
                 catch(Exception) {
                     Console.WriteLine();
-                    Console.WriteLine("Your show was out of range. Try again.");
+                    Console.WriteLine("Your shot was out of range. Try again.");
                     continue;
                 }           
                 var isHit = GameController.CheckIsHit(enemyFleet, position);
@@ -275,7 +275,7 @@ namespace Battleship.Ascii
             Console.WriteLine("");
             Console.WriteLine("");
             if(fleet == enemyFleet) {
-                Console.WriteLine("Congratulation! You have wone the game!");
+                Console.WriteLine("Congratulation! You have won the game!");
             }
             else {
                 Console.WriteLine("You have been sent to Davey Jones's locker!");
