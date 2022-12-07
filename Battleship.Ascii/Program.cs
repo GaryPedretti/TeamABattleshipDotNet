@@ -96,13 +96,13 @@ namespace Battleship.Ascii
                 
                 if(isHit)
                 {
-                    Console.ForegroundColor=ConsoleColor.Red;
-                    Console.WriteLine("Yeah ! Nice hit !", Console.ForegroundColor);
+                    
+                    WriteLine( ConsoleColor.Red,"Yeah ! Nice hit !");
                 }
                 else
                 {
-                    Console.ForegroundColor=ConsoleColor.Blue;
-                    Console.WriteLine("Miss", Console.ForegroundColor);
+                    
+                    WriteLine(ConsoleColor.Blue,"Miss"); 
                 }
                 Console.ForegroundColor=ConsoleColor.White;
                 Console.WriteLine("Enemy Ships Sunk");
@@ -123,6 +123,7 @@ namespace Battleship.Ascii
                     Console.ForegroundColor=ConsoleColor.Blue;
                     Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row,  "missed", Console.ForegroundColor);
                 }
+               
                 if (isHit)
                 {
                     Console.Beep();
@@ -137,6 +138,7 @@ namespace Battleship.Ascii
                     Console.WriteLine(@"                   \  \   /  /");
 
                 }
+                Console.ForegroundColor=ConsoleColor.White;
                 Console.WriteLine("My Ships Sunk");
                 PrintShipsSunk(myFleet);
                 Console.WriteLine("My Ships Remaining");
@@ -144,7 +146,16 @@ namespace Battleship.Ascii
             }
             while (true);
         }
+        public static void WriteLine(System.ConsoleColor color, string format, params object[] args)
+        {
+            var currentColor=Console.ForegroundColor;
+            Console.ForegroundColor=color;
 
+            Console.WriteLine(format,args);
+            Console.ForegroundColor=currentColor;
+
+
+        }
         public static Position ParsePosition(string input)
         {
             var letter = (Letters)Enum.Parse(typeof(Letters), input.ToUpper().Substring(0, 1));
