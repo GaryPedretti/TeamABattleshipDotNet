@@ -3,7 +3,7 @@
 [![build and test dotnet](https://github.com/proscrumdev/battleship-dotnet/actions/workflows/buildpipeline.yaml/badge.svg)](https://github.com/proscrumdev/battleship-dotnet/actions/workflows/buildpipeline.yaml)
 
 # Battleship .NET
-A simple game of Battleship, written in C# based on .NET 6. The purpose of this repository is to serve as an entry point into coding exercises and it was especially created for scrum.orgs Applying Professional Scrum for Software Development course (www.scrum.org/apssd). The code in this repository is unfinished by design.
+A simple game of Battleship, written in C# based on .NET 7. The purpose of this repository is to serve as an entry point into coding exercises and it was especially created for scrum.orgs Applying Professional Scrum for Software Development course (www.scrum.org/apssd). The code in this repository is unfinished by design.
 
 # Build the application 
 In the root folder of the application there is a Battleship.sln which can be used to build all projects by executing
@@ -14,12 +14,16 @@ dotnet build
 # Run the application
 
 ## Running locally
-You neet to have the .NET6 runtime installed on your local machine
+You need to have the .NET 7 runtime installed on your local machine
 https://www.microsoft.com/net/download
 
 You can now run the game with
 ```bash
 dotnet run --project .\Battleship.Ascii\Battleship.Ascii.csproj
+
+```GitPod:
+dotnet run --project /workspace/TeamABattleshipDotNet/Battleship.Ascii/Battleship.Ascii.csproj
+
 ```
 
 
