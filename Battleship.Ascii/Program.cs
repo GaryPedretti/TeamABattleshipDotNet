@@ -4,6 +4,7 @@ namespace Battleship.Ascii
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Xml.Schema;
     using Battleship.Ascii.TelemetryClient;
     using Battleship.GameController;
     using Battleship.GameController.Contracts;
@@ -136,6 +137,73 @@ namespace Battleship.Ascii
             return position;
         }
 
+/*
+        private void PrintMyFleetPositions()
+        {
+            String[][] grid =  {
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "}
+            };
+
+            foreach (var ship in myFleet)
+            {
+                foreach (var position in ship.Positions)
+                {
+                    if(position.Row == i)
+                    {
+
+                    }
+                }
+            }
+        }
+        */
+
+        private static string ValidatePosition(string position)
+        {
+            var validatedPosition = "";
+
+            String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H"};
+            String[] numbers = {"1", "2", "3", "4", "5", "6", "7", "8"};
+
+            if(position.Length != 2)
+            {
+                return validatedPosition;
+            }
+
+            var success = false;
+            for(int i = 0; i < letters.Length; i++)
+            {
+                if (position.Substring(0,1) == letters[i])
+                {
+                    success = true;
+                    break;
+                }
+            }
+
+            if(success)
+            {
+                success = false;
+
+                for(int i = 0; i < numbers.Length; i++)
+                {
+                    if (position.Substring(1,1) == numbers[i])
+                    {
+                        success = true;
+                        validatedPosition = position;
+                        break;
+                    }
+                }
+            }
+
+            return validatedPosition;
+        }
+
         private static void InitializeGame()
         {
             InitializeMyFleet();
@@ -155,8 +223,18 @@ namespace Battleship.Ascii
                 Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
                 for (var i = 1; i <= ship.Size; i++)
                 {
-                    Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
-                    var position = Console.ReadLine();
+                    var position = "";
+                    while(position.Equals(""))
+                    {
+                        Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
+                        position = ValidatePosition(Console.ReadLine());
+
+                        if(position.Equals(""))
+                        {
+                            Console.WriteLine("Invalid position, please try again.\n");
+                        }
+                    }
+
                     ship.AddPosition(position);
                     telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
                 }
