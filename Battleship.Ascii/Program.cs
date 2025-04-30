@@ -234,39 +234,70 @@ namespace Battleship.Ascii
         {
             myFleet = GameController.InitializeShips().ToList();
             resetConsoleColor();
-            Console.WriteLine("Please position your fleet (Game board size is from A to H and 1 to 8) :");
-
-            foreach (var ship in myFleet)
-            {
-                 bool addOK = false;
-                Console.WriteLine();
-                Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
-                for (var i = 1; i <= ship.Size; i++)
+            Console.WriteLine("Please position your fleet (Game board size is from A to H and 1 to 8) : // type TEST to enter test mode");
+            if(Console.ReadLine().Equals("TEST")){
+                InitializeMyFleetForTest();
+                Console.WriteLine("TEST MODE ENTERED");
+            }else{
+                foreach (var ship in myFleet)
                 {
-                    var position = "";
-                    do {
-                    while(position.Equals(""))
+                    bool addOK = false;
+                    Console.WriteLine();
+                    Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
+                    for (var i = 1; i <= ship.Size; i++)
                     {
-                        
-                        Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
-                        position = ValidatePosition(Console.ReadLine());
-
-                        if(position.Equals(""))
+                        var position = "";
+                        do {
+                        while(position.Equals(""))
                         {
-                            Console.BackgroundColor = ConsoleColor.Red;
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("Invalid position, please try again.");
-                            resetConsoleColor();
-                            Console.WriteLine();
-                        }
-                    }
+                            
+                            Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
+                            position = ValidatePosition(Console.ReadLine());
 
-                    addOK = ship.AddPosition(position);
-                    telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
-                    } while (addOK == false);
+                            if(position.Equals(""))
+                            {
+                                Console.BackgroundColor = ConsoleColor.Red;
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.Write("Invalid position, please try again.");
+                                resetConsoleColor();
+                                Console.WriteLine();
+                            }
+                        }
+
+                        addOK = ship.AddPosition(position);
+                        telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
+                        } while (addOK == false);
+                    }
+                    numPositions++;
                 }
-                numPositions++;
             }
+        }
+
+        private static void InitializeMyFleetForTest()
+        {
+            myFleet = GameController.InitializeShips().ToList();
+
+            myFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 4 });
+            myFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 5 });
+            myFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 6 });
+            myFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 7 });
+            myFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 8 });
+
+            myFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 6 });
+            myFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 7 });
+            myFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 8 });
+            myFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 9 });
+
+            myFleet[2].Positions.Add(new Position { Column = Letters.A, Row = 3 });
+            myFleet[2].Positions.Add(new Position { Column = Letters.B, Row = 3 });
+            myFleet[2].Positions.Add(new Position { Column = Letters.C, Row = 3 });
+
+            myFleet[3].Positions.Add(new Position { Column = Letters.F, Row = 8 });
+            myFleet[3].Positions.Add(new Position { Column = Letters.G, Row = 8 });
+            myFleet[3].Positions.Add(new Position { Column = Letters.H, Row = 8 });
+
+            myFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
+            myFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
         }
 
         private static void InitializeEnemyFleet()
