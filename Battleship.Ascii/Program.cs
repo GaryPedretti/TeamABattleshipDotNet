@@ -21,7 +21,7 @@ namespace Battleship.Ascii
 
         private static int totalHitCountComputer;
 
-        private static int numPositions;
+        private static int numPositions = 17;
 
         static void Main()
         {
@@ -103,11 +103,17 @@ namespace Battleship.Ascii
                     Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
                     Console.WriteLine(@"                 -\  \     /  /-");
                     Console.WriteLine(@"                   \  \   /  /");
+                    if (totalHitCountPlayer == numPositions)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("You Win!");
+                        while(true);
+                    }
                 }
                 if(isHit){
-                    Console.ForegroundColor = ConsoleColor.Green;
-                }else{
                     Console.ForegroundColor = ConsoleColor.Red;
+                }else{
+                    Console.ForegroundColor = ConsoleColor.Blue;
                 }
 
                 Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
@@ -116,12 +122,17 @@ namespace Battleship.Ascii
                 isHit = GameController.CheckIsHit(myFleet, position);
                 telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
                 Console.WriteLine();
+                if(isHit){
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }else{
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
                 Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !" : "missed");
                 if (isHit)
                 {
                     totalHitCountComputer++;
                     Console.Beep();
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(@"                \         .  ./");
                     Console.WriteLine(@"              \      .:"";'.:..""   /");
                     Console.WriteLine(@"                  (M^^.^~~:.'"").");
@@ -130,8 +141,15 @@ namespace Battleship.Ascii
                     Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
                     Console.WriteLine(@"                 -\  \     /  /-");
                     Console.WriteLine(@"                   \  \   /  /");
+                    if (totalHitCountComputer == numPositions)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("You Lose!");
+                        while(true);
+                    }
 
                 }
+                resetConsoleColor();
             }
             while (true);
 
