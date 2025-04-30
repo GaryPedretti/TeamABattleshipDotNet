@@ -17,6 +17,12 @@ namespace Battleship.Ascii
 
         private static ITelemetryClient telemetryClient;
 
+        private static int totalHitCountPlayer;
+
+        private static int totalHitCountComputer;
+
+        private static int numPositions;
+
         static void Main()
         {
             telemetryClient = new ApplicationInsightsTelemetryClient();
@@ -82,6 +88,7 @@ namespace Battleship.Ascii
                 telemetryClient.TrackEvent("Player_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
                 if (isHit)
                 {
+                    totalHitCountPlayer++;
                     Console.Beep();
 
                     Console.WriteLine(@"                \         .  ./");
@@ -103,6 +110,7 @@ namespace Battleship.Ascii
                 Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !" : "missed");
                 if (isHit)
                 {
+                    totalHitCountComputer++;
                     Console.Beep();
 
                     Console.WriteLine(@"                \         .  ./");
@@ -117,6 +125,8 @@ namespace Battleship.Ascii
                 }
             }
             while (true);
+
+            
         }
 
         public static Position ParsePosition(string input)
@@ -238,6 +248,7 @@ namespace Battleship.Ascii
                     ship.AddPosition(position);
                     telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
                 }
+                numPositions++;
             }
         }
 
