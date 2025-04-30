@@ -55,6 +55,8 @@ namespace Battleship.Ascii
             }
             catch (Exception e)
             {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("A serious problem occured. The application cannot continue and will be closed.");
                 telemetryClient.TrackException(e);
                 Console.WriteLine("");
@@ -80,8 +82,10 @@ namespace Battleship.Ascii
 
             do
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine();
                 Console.WriteLine("Player, it's your turn");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Enter coordinates for your shot :");
                 var position = ParsePosition(Console.ReadLine());                
                 var isHit = GameController.CheckIsHit(enemyFleet, position);
@@ -90,7 +94,7 @@ namespace Battleship.Ascii
                 {
                     totalHitCountPlayer++;
                     Console.Beep();
-
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(@"                \         .  ./");
                     Console.WriteLine(@"              \      .:"";'.:..""   /");
                     Console.WriteLine(@"                  (M^^.^~~:.'"").");
@@ -100,9 +104,14 @@ namespace Battleship.Ascii
                     Console.WriteLine(@"                 -\  \     /  /-");
                     Console.WriteLine(@"                   \  \   /  /");
                 }
+                if(isHit){
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }else{
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
 
                 Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
-
+                resetConsoleColor();
                 position = GetRandomPosition();
                 isHit = GameController.CheckIsHit(myFleet, position);
                 telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
@@ -112,7 +121,7 @@ namespace Battleship.Ascii
                 {
                     totalHitCountComputer++;
                     Console.Beep();
-
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(@"                \         .  ./");
                     Console.WriteLine(@"              \      .:"";'.:..""   /");
                     Console.WriteLine(@"                  (M^^.^~~:.'"").");
@@ -224,7 +233,7 @@ namespace Battleship.Ascii
         private static void InitializeMyFleet()
         {
             myFleet = GameController.InitializeShips().ToList();
-
+            resetConsoleColor();
             Console.WriteLine("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
             foreach (var ship in myFleet)
@@ -241,7 +250,11 @@ namespace Battleship.Ascii
 
                         if(position.Equals(""))
                         {
-                            Console.WriteLine("Invalid position, please try again.\n");
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("Invalid position, please try again.");
+                            resetConsoleColor();
+                            Console.WriteLine();
                         }
                     }
 
@@ -278,5 +291,11 @@ namespace Battleship.Ascii
             enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
             enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
         }
+    
+
+    private static void resetConsoleColor(){
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
     }
+}
 }
