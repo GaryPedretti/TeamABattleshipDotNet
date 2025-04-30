@@ -21,7 +21,7 @@ namespace Battleship.Ascii
 
         private static int totalHitCountComputer;
 
-        private static int numPositions = 17;
+        private static int numPositions =;
 
         static void Main()
         {
@@ -256,16 +256,13 @@ namespace Battleship.Ascii
 
             foreach (var ship in myFleet)
             {
-                 bool addOK = false;
                 Console.WriteLine();
                 Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
                 for (var i = 1; i <= ship.Size; i++)
                 {
                     var position = "";
-                    do {
                     while(position.Equals(""))
                     {
-                        
                         Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
                         position = ValidatePosition(Console.ReadLine());
 
@@ -279,9 +276,8 @@ namespace Battleship.Ascii
                         }
                     }
 
-                    addOK = ship.AddPosition(position);
+                    ship.AddPosition(position);
                     telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
-                    } while (addOK == false);
                 }
             }
         }
