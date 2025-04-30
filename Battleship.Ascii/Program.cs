@@ -121,7 +121,7 @@ namespace Battleship.Ascii
                 {
                     totalHitCountComputer++;
                     Console.Beep();
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine(@"                \         .  ./");
                     Console.WriteLine(@"              \      .:"";'.:..""   /");
                     Console.WriteLine(@"                  (M^^.^~~:.'"").");

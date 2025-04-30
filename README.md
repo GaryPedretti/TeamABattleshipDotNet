@@ -19,10 +19,11 @@ https://www.microsoft.com/net/download
 
 You can now run the game with
 ```bash
-dotnet run --project .\Battleship.Ascii\Battleship.Ascii.csproj
+le
 
 ```GitPod:
 dotnet run --project /workspace/TeamABattleshipDotNet/Battleship.Ascii/Battleship.Ascii.csproj
+dotnet run --project /workspaces/TeamABattleshipDotNet/Battleship.Ascii/Battleship.Ascii.csproj
 
 ```
 
