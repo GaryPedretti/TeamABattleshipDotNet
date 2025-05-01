@@ -3,6 +3,7 @@ namespace Battleship.Ascii
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Xml.Schema;
     using Battleship.Ascii.TelemetryClient;
@@ -187,8 +188,12 @@ namespace Battleship.Ascii
         
         public static Position ParsePosition(string input)
         {
+            if (input[0] < 'A' || input[0] > 'H')
+            {
+                throw new InvalidDataException();
+            }
             var letter = (Letters)Enum.Parse(typeof(Letters), input.ToUpper().Substring(0, 1));
-            var number = int.Parse(input.Substring(1, 1));
+            var number = int.Parse(input.Substring(1));
             return new Position(letter, number);
         }
 
