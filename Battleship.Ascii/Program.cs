@@ -105,7 +105,7 @@ namespace Battleship.Ascii
                     if (totalHitCountPlayer == numPositions)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("You Win!");
+                        Console.WriteLine("You are a Winner!");
                         while(true);
                     }
                 }
