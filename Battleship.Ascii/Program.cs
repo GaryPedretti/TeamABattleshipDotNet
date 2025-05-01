@@ -293,8 +293,9 @@ namespace Battleship.Ascii
                     Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
                     for (var i = 1; i <= ship.Size; i++)
                     {
-                        var position = "";
                         do {
+                        var position = "";
+                        
                         while(position.Equals(""))
                         {
                             
