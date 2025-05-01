@@ -86,8 +86,7 @@ namespace Battleship.Ascii
                 Console.WriteLine();
                 Console.WriteLine("Player, it's your turn");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Enter coordinates for your shot :");
-                var position = ParsePosition(Console.ReadLine());                
+                Position position = GetShotCoordinates();              
                 var isHit = GameController.CheckIsHit(enemyFleet, position);
                 telemetryClient.TrackEvent("Player_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
                 if (isHit)
@@ -156,6 +155,36 @@ namespace Battleship.Ascii
             
         }
 
+        private static Position GetShotCoordinates()
+        {
+            Position position;
+            while (true)
+            {
+                Console.WriteLine("Enter coordinates for your shot :");
+                try 
+                {
+                    position = ParsePosition(Console.ReadLine());
+                    if ((int)position.Column > 8)
+                    {
+                        Console.WriteLine("Column is invalid!");
+                        continue;
+                    }
+                    else if (position.Row > 8)
+                    {
+                        Console.WriteLine("Row is invalid!");
+                        continue;
+                    }
+                    break;
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Coordinates are invalid!");
+                    continue;
+                }
+            }
+            return position;
+        }
+        
         public static Position ParsePosition(string input)
         {
             var letter = (Letters)Enum.Parse(typeof(Letters), input.ToUpper().Substring(0, 1));
