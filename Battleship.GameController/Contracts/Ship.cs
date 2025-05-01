@@ -75,9 +75,10 @@ namespace Battleship.GameController.Contracts
                 Positions.Add(new Position { Column = letter, Row = number });
             return input;
         }
-        public void AddPosition(Position pos)
+        public bool AddPosition(Position pos)
         {
             Positions.Add(pos);
+            return true;
         }
 
         public bool IsPlaced

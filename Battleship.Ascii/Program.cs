@@ -4,7 +4,11 @@ namespace Battleship.Ascii
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Globalization;
     using System.Linq;
+    using System.Numerics;
+    using System.Runtime.InteropServices;
+    using System.Transactions;
     using System.Xml.Schema;
     using Battleship.Ascii.TelemetryClient;
     using Battleship.GameController;
@@ -12,9 +16,34 @@ namespace Battleship.Ascii
 
     public class Program
     {
+        private static String[] shipNames = {"1", "2", "3", "4", "5"};
+        private static int[] shipSizes = {5, 4, 3, 3, 2};
+
         private static List<Ship> myFleet;
 
         private static List<Ship> enemyFleet;
+
+        
+        private static String[,] myGrid =  {
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "}
+            };
+        private static String[,] enemyGrid =  {
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
+                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "}
+            };
 
         private static ITelemetryClient telemetryClient;
 
@@ -153,7 +182,7 @@ namespace Battleship.Ascii
             }
             while (true);
 
-            
+
         }
 
         private static Position GetShotCoordinates()
@@ -208,51 +237,89 @@ namespace Battleship.Ascii
             return position;
         }
 
-/*
-        private void PrintMyFleetPositions()
+        private static void AddEnemyShipPosition(Position pos)
         {
-            String[][] grid =  {
-                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
-                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
-                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
-                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
-                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
-                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
-                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "},
-                                {"W ", "W ", "W ", "W ", "W ", "W ", "W ", "W "}
-            };
+            int row = pos.Row;
+            int col = (int)pos.Column;
 
-            foreach (var ship in myFleet)
-            {
-                foreach (var position in ship.Positions)
-                {
-                    if(position.Row == i)
-                    {
-
-                    }
-                }
-            }
+            enemyGrid[row, col] = "S ";
         }
-        */
 
-        private static string ValidatePosition(string position)
+        private static void AddMyShipPosition(Position pos)
         {
-            var validatedPosition = "";
+            int row = pos.Row;
+            int col = (int)pos.Column;
+
+            myGrid[row-1, col] = "S ";
+        }
+
+        private static void PrintMyFleetPositions()
+        {
+            Console.WriteLine();
+            Console.WriteLine("MY SHIPS:");
+            Console.WriteLine();
+
+            // TODO: not 8
+            for(int i = 0; i < 8; i++)
+            {
+                // TODO: not 8
+                for(int j = 0; j < 8; j++)
+                {
+                    Console.Write(myGrid[i,j]);
+                }
+
+                Console.WriteLine();
+            }
+            
+            Console.WriteLine();
+        }
+
+        private static void PrintEnemyFleetPositions()
+        {
+            Console.WriteLine();
+            Console.WriteLine("ENEMY SHIPS:");
+            Console.WriteLine();
+
+            // TODO: not 8
+            for(int i = 0; i < 8; i++)
+            {
+                // TODO: not 8
+                for(int j = 0; j < 8; j++)
+                {
+                    Console.Write(enemyGrid[i,j]);
+                }
+                
+                Console.WriteLine();
+            }
+            
+            Console.WriteLine();
+        }
+
+        private static Position ValidatePositionStr(string positionStr)
+        {
+            var pos = new Position();
 
             String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H"};
             String[] numbers = {"1", "2", "3", "4", "5", "6", "7", "8"};
 
-            if(position.Length != 2)
+            /*
+            if(positionStr.Equals("SKIP ALL") || positionStr.Equals("RDM"))
             {
-                return validatedPosition;
+                return GetRandomPosition();
+            }
+            */
+            /*else*/ if(positionStr.Length != 2)
+            {
+                return null;
             }
 
             var success = false;
             for(int i = 0; i < letters.Length; i++)
             {
-                if (position.Substring(0,1) == letters[i])
+                if (positionStr.Substring(0,1) == letters[i])
                 {
                     success = true;
+                    pos.Column = (Letters)(i);
                     break;
                 }
             }
@@ -263,23 +330,27 @@ namespace Battleship.Ascii
 
                 for(int i = 0; i < numbers.Length; i++)
                 {
-                    if (position.Substring(1,1) == numbers[i])
+                    if (positionStr.Substring(1,1) == numbers[i])
                     {
                         success = true;
-                        validatedPosition = position;
+                        pos.Row = i+1;
                         break;
                     }
                 }
             }
 
-            return validatedPosition;
+            if(!success)
+            {
+                return null;
+            }
+
+            return pos;
         }
 
         private static void InitializeGame()
         {
-            InitializeMyFleet();
-
             InitializeEnemyFleet();
+            InitializeMyFleet();
         }
 
         private static void InitializeMyFleet()
@@ -292,23 +363,27 @@ namespace Battleship.Ascii
                 InitializeMyFleetForTest();
                 Console.WriteLine("TEST MODE ENTERED");
             }else{
+
                 foreach (var ship in myFleet)
                 {
                     bool addOK = false;
+                    var inputStr = "RDM";
                     Console.WriteLine();
                     Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
                     for (var i = 1; i <= ship.Size; i++)
                     {
                         do {
-                        var position = "";
-                        
-                        while(position.Equals(""))
-                        {
-                            
-                            Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
-                            position = ValidatePosition(Console.ReadLine());
 
-                            if(position.Equals(""))
+                        Position pos = null;
+                        
+                        while(pos == null)
+                        {
+                            Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
+                            inputStr = Console.ReadLine();
+
+                            pos = ValidatePositionStr(inputStr);
+
+                            if(pos == null)
                             {
                                 Console.BackgroundColor = ConsoleColor.Red;
                                 Console.ForegroundColor = ConsoleColor.White;
@@ -316,9 +391,14 @@ namespace Battleship.Ascii
                                 resetConsoleColor();
                                 Console.WriteLine();
                             }
+                            else
+                            { 
+                                addOK = ship.AddPosition(pos);
+                                AddMyShipPosition(pos);
+                            }
                         }
 
-                        if(usedFleetPositions.Contains(position)){
+                        if(usedFleetPositions.Contains(inputStr)){
                             addOK = false;
                             Console.BackgroundColor = ConsoleColor.Red;
                             Console.ForegroundColor = ConsoleColor.White;
@@ -326,16 +406,16 @@ namespace Battleship.Ascii
                             resetConsoleColor();
                             Console.WriteLine();
                         }else{                     
-                            usedFleetPositions.Add(ship.AddPosition(position));
+                            usedFleetPositions.Add(ship.AddPosition(inputStr));
                             Console.BackgroundColor = ConsoleColor.Green;
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("Position " + position + " added successfully.");
+                            Console.Write("Position " + inputStr + " added successfully.");
                             resetConsoleColor();
                             Console.WriteLine();
                             addOK = true;
                         }
-                        
-                        telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
+                        PrintMyFleetPositions();
+                        telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", inputStr }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
                         } while (addOK == false);
                     }
                     numPositions++;
@@ -374,6 +454,24 @@ namespace Battleship.Ascii
         {
             enemyFleet = GameController.InitializeShips().ToList();
 
+            int shipCount = 0;
+            foreach(var ship in enemyFleet)
+            {
+                int shipSize = shipSizes[shipCount];
+                for(int i = 0; i < ship.Size; i++)
+                {
+                    Position pos = GetRandomPosition();
+
+                    enemyFleet[shipCount].Positions.Add(pos);
+                    AddEnemyShipPosition(pos);
+                }
+
+                shipCount++;
+            }
+
+            PrintEnemyFleetPositions();
+
+            /*
             enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 4 });
             enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 5 });
             enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 6 });
@@ -395,6 +493,7 @@ namespace Battleship.Ascii
 
             enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
             enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
+            */
         }
     
 
