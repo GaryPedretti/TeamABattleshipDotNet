@@ -280,6 +280,7 @@ namespace Battleship.Ascii
         private static void InitializeMyFleet()
         {
             myFleet = GameController.InitializeShips().ToList();
+            List<String> usedFleetPositions = new List<String>();
             resetConsoleColor();
             Console.WriteLine("Please position your fleet (Game board size is from A to H and 1 to 8) : // type TEST to enter test mode");
             if(Console.ReadLine().Equals("TEST")){
@@ -293,8 +294,9 @@ namespace Battleship.Ascii
                     Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
                     for (var i = 1; i <= ship.Size; i++)
                     {
-                        var position = "";
                         do {
+                        var position = "";
+                        
                         while(position.Equals(""))
                         {
                             
@@ -311,7 +313,23 @@ namespace Battleship.Ascii
                             }
                         }
 
-                        addOK = ship.AddPosition(position);
+                        if(usedFleetPositions.Contains(position)){
+                            addOK = false;
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("Invalid position, please try again.");
+                            resetConsoleColor();
+                            Console.WriteLine();
+                        }else{                     
+                            usedFleetPositions.Add(ship.AddPosition(position));
+                            Console.BackgroundColor = ConsoleColor.Green;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("Position " + position + " added successfully.");
+                            resetConsoleColor();
+                            Console.WriteLine();
+                            addOK = true;
+                        }
+                        
                         telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
                         } while (addOK == false);
                     }

@@ -57,7 +57,7 @@ namespace Battleship.GameController.Contracts
         /// <param name="input">
         /// The input.
         /// </param>
-        public bool AddPosition(string input)
+        public string AddPosition(string input)
         {
             if (Positions == null)
             {
@@ -69,11 +69,11 @@ namespace Battleship.GameController.Contracts
             if (Positions.Contains(new Position { Column = letter, Row = number }))
              {
                 Console.WriteLine("Position " + letter + number + " already taken");
-                return false;
+                return "";
              }
            else
                 Positions.Add(new Position { Column = letter, Row = number });
-            return true;
+            return input;
         }
 
         public bool IsPlaced
