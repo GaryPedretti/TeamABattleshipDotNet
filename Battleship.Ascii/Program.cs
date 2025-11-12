@@ -19,7 +19,7 @@ namespace Battleship.Ascii
         static void Main()
         {
             telemetryClient = new ApplicationInsightsTelemetryClient();
-            telemetryClient.TrackEvent("ApplicationStarted", new Dictionary<string, string> { { "Technology", ".NET"} });
+            telemetryClient.TrackEvent("ApplicationStarted", new Dictionary<string, string> { { "Technology", ".NET" } });
 
             try
             {
@@ -51,15 +51,16 @@ namespace Battleship.Ascii
                 Console.WriteLine("A serious problem occured. The application cannot continue and will be closed.");
                 telemetryClient.TrackException(e);
                 Console.WriteLine("");
-                Console.WriteLine("Error details:");      
+                Console.WriteLine("Error details:");
                 throw new Exception("Fatal error", e);
             }
 
         }
-		
-		public static void DrawCanon()
-		{
-			Console.WriteLine("                  __");
+
+        public static void DrawCanon()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("                  __");
             Console.WriteLine(@"                 /  \");
             Console.WriteLine("           .-.  |    |");
             Console.WriteLine(@"   *    _.-'  \  \__/");
@@ -69,37 +70,38 @@ namespace Battleship.Ascii
             Console.WriteLine(@"  |     /_\'");
             Console.WriteLine(@"   \    \_/");
             Console.WriteLine(@"    """"""""");
-		}
-		
-		public static void DrawHit()
-		{
-			Console.Beep();
+            Console.ResetColor();
+        }
+
+        public static void DrawHit()
+        {
+            Console.Beep();
             Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine(@"                \         .  ./");
-			Console.WriteLine(@"              \      .:"";'.:..""   /");
-			Console.WriteLine(@"                  (M^^.^~~:.'"").");
-			Console.WriteLine(@"            -   (/  .    . . \ \)  -");
-			Console.WriteLine(@"               ((| :. ~ ^  :. .|))");
-			Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
-			Console.WriteLine(@"                 -\  \     /  /-");
-			Console.WriteLine(@"                   \  \   /  /");
-			Console.ResetColor();
-		}
-		
-		public static void DrawMiss()
-		{
-			Console.Beep();
+            Console.WriteLine(@"                \         .  ./");
+            Console.WriteLine(@"              \      .:"";'.:..""   /");
+            Console.WriteLine(@"                  (M^^.^~~:.'"").");
+            Console.WriteLine(@"            -   (/  .    . . \ \)  -");
+            Console.WriteLine(@"               ((| :. ~ ^  :. .|))");
+            Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
+            Console.WriteLine(@"                 -\  \     /  /-");
+            Console.WriteLine(@"                   \  \   /  /");
+            Console.ResetColor();
+        }
+
+        public static void DrawMiss()
+        {
+            Console.Beep();
             Console.ForegroundColor = ConsoleColor.Blue;
-			Console.WriteLine(@"                						");
-			Console.WriteLine(@"              							");
-			Console.WriteLine(@"                  						");
-			Console.WriteLine(@"            							");
-			Console.WriteLine(@"               							");
-			Console.WriteLine(@"            	~~~~~~~~~~				");
-			Console.WriteLine(@"             ~~~~~~~~~~~~~~~~~			");
-			Console.WriteLine(@"           ~~~~~~~~~~~~~~~~~~~~~  		");
-			Console.ResetColor();
-		}
+            Console.WriteLine(@"                						");
+            Console.WriteLine(@"              							");
+            Console.WriteLine(@"                  						");
+            Console.WriteLine(@"            							");
+            Console.WriteLine(@"               							");
+            Console.WriteLine(@"            	~~~~~~~~~~				");
+            Console.WriteLine(@"             ~~~~~~~~~~~~~~~~~			");
+            Console.WriteLine(@"           ~~~~~~~~~~~~~~~~~~~~~  		");
+            Console.ResetColor();
+        }
 
         private static void StartGame()
         {
@@ -109,8 +111,10 @@ namespace Battleship.Ascii
             do
             {
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Player, it's your turn");
                 Console.WriteLine("Enter coordinates for your shot :");
+                Console.ResetColor();
                 var position = ParsePosition(Console.ReadLine());
                 var isHit = GameController.CheckIsHit(enemyFleet, position);
                 telemetryClient.TrackEvent("Player_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
@@ -118,31 +122,43 @@ namespace Battleship.Ascii
                 {
                     DrawHit();
                 }
-				else
-				{
-					DrawMiss();
-				}
+                else
+                {
+                    DrawMiss();
+                }
+
+                if(isHit)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }    
 
                 Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
-
+                Console.ResetColor();
                 position = GetRandomPosition();
                 isHit = GameController.CheckIsHit(myFleet, position);
                 telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
                 Console.WriteLine();
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !" : "missed");
+                Console.ResetColor();
                 if (isHit)
                 {
-                   DrawHit();
+                    DrawHit();
                 }
-				else
-				{
-				   DrawMiss();
-				}
+                else
+                {
+                    DrawMiss();
+                }
             }
             while (true);
         }
-        
-        
+
+
 
         public static Position ParsePosition(string input)
         {
@@ -173,20 +189,25 @@ namespace Battleship.Ascii
         {
             myFleet = GameController.InitializeShips().ToList();
 
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
             foreach (var ship in myFleet)
             {
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
                 for (var i = 1; i <= ship.Size; i++)
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
+                    Console.ResetColor();
                     var position = Console.ReadLine();
                     ship.AddPosition(position);
                     telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
                 }
             }
+            Console.ResetColor();
         }
 
         private static void InitializeEnemyFleet()
