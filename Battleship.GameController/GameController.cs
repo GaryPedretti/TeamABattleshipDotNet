@@ -43,13 +43,8 @@ namespace Battleship.GameController
 
             foreach (var ship in ships)
             {
-                foreach (var position in ship.Positions)
-                {
-                    if (position.Equals(shot))
-                    {
-                        return true;
-                    }
-                }
+                if (ship.CheckHit(shot))
+                    return true;
             }
 
             return false;
