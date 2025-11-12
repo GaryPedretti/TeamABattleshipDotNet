@@ -56,11 +56,10 @@ namespace Battleship.Ascii
             }
 
         }
-
-        private static void StartGame()
-        {
-            Console.Clear();
-            Console.WriteLine("                  __");
+		
+		public static void DrawCanon()
+		{
+			Console.WriteLine("                  __");
             Console.WriteLine(@"                 /  \");
             Console.WriteLine("           .-.  |    |");
             Console.WriteLine(@"   *    _.-'  \  \__/");
@@ -70,28 +69,59 @@ namespace Battleship.Ascii
             Console.WriteLine(@"  |     /_\'");
             Console.WriteLine(@"   \    \_/");
             Console.WriteLine(@"    """"""""");
+		}
+		
+		public static void DrawHit()
+		{
+			Console.Beep();
+            Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine(@"                \         .  ./");
+			Console.WriteLine(@"              \      .:"";'.:..""   /");
+			Console.WriteLine(@"                  (M^^.^~~:.'"").");
+			Console.WriteLine(@"            -   (/  .    . . \ \)  -");
+			Console.WriteLine(@"               ((| :. ~ ^  :. .|))");
+			Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
+			Console.WriteLine(@"                 -\  \     /  /-");
+			Console.WriteLine(@"                   \  \   /  /");
+			Console.ResetColor();
+		}
+		
+		public static void DrawMiss()
+		{
+			Console.Beep();
+            Console.ForegroundColor = ConsoleColor.Blue;
+			Console.WriteLine(@"                						");
+			Console.WriteLine(@"              							");
+			Console.WriteLine(@"                  						");
+			Console.WriteLine(@"            							");
+			Console.WriteLine(@"               							");
+			Console.WriteLine(@"            	~~~~~~~~~~				");
+			Console.WriteLine(@"             ~~~~~~~~~~~~~~~~~			");
+			Console.WriteLine(@"           ~~~~~~~~~~~~~~~~~~~~~  		");
+			Console.ResetColor();
+		}
+
+        private static void StartGame()
+        {
+            Console.Clear();
+            DrawCanon();
 
             do
             {
                 Console.WriteLine();
                 Console.WriteLine("Player, it's your turn");
                 Console.WriteLine("Enter coordinates for your shot :");
-                var position = ParsePosition(Console.ReadLine());                
+                var position = ParsePosition(Console.ReadLine());
                 var isHit = GameController.CheckIsHit(enemyFleet, position);
                 telemetryClient.TrackEvent("Player_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
                 if (isHit)
                 {
-                    Console.Beep();
-
-                    Console.WriteLine(@"                \         .  ./");
-                    Console.WriteLine(@"              \      .:"";'.:..""   /");
-                    Console.WriteLine(@"                  (M^^.^~~:.'"").");
-                    Console.WriteLine(@"            -   (/  .    . . \ \)  -");
-                    Console.WriteLine(@"               ((| :. ~ ^  :. .|))");
-                    Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
-                    Console.WriteLine(@"                 -\  \     /  /-");
-                    Console.WriteLine(@"                   \  \   /  /");
+                    DrawHit();
                 }
+				else
+				{
+					DrawMiss();
+				}
 
                 Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
 
@@ -102,21 +132,17 @@ namespace Battleship.Ascii
                 Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !" : "missed");
                 if (isHit)
                 {
-                    Console.Beep();
-
-                    Console.WriteLine(@"                \         .  ./");
-                    Console.WriteLine(@"              \      .:"";'.:..""   /");
-                    Console.WriteLine(@"                  (M^^.^~~:.'"").");
-                    Console.WriteLine(@"            -   (/  .    . . \ \)  -");
-                    Console.WriteLine(@"               ((| :. ~ ^  :. .|))");
-                    Console.WriteLine(@"            -   (\- |  \ /  |  /)  -");
-                    Console.WriteLine(@"                 -\  \     /  /-");
-                    Console.WriteLine(@"                   \  \   /  /");
-
+                   DrawHit();
                 }
+				else
+				{
+				   DrawMiss();
+				}
             }
             while (true);
         }
+        
+        
 
         public static Position ParsePosition(string input)
         {
