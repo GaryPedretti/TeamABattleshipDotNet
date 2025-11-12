@@ -37,6 +37,11 @@ namespace Battleship.GameController.Contracts
         /// </summary>
         public List<Position> Positions { get; set; }
 
+/// <summary>
+/// Gets or sets the list of hits. Hits should always
+/// </summary>
+        public List<Position> Hits { get; private set; }
+
         /// <summary>
         /// The color of the ship
         /// </summary>
@@ -77,6 +82,24 @@ namespace Battleship.GameController.Contracts
                 if (value.Equals(isPlaced)) return;
                 isPlaced = value;
             }
+        }
+
+        public bool CheckHit(Position shot)
+        {
+            if (Positions.Contains(shot))
+            {
+                if (Hits.Contains(shot))
+                {
+                    return false;
+                }
+                else
+                {
+                    Hits.Add(shot);
+                    return true;
+                }
+            }
+
+            return false;
         }
         #endregion
     }
