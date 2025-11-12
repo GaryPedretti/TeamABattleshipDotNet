@@ -21,6 +21,7 @@ namespace Battleship.GameController.Contracts
         public Ship()
         {
             Positions = new List<Position>();
+            Hits = new List<Position>();
         }
 
         #endregion
@@ -104,7 +105,16 @@ namespace Battleship.GameController.Contracts
 
         public bool IsSunk()
         {
-            return Hits == Positions;
+            bool ret = true;
+            foreach (var p in Positions)
+            {
+                if (!Hits.Contains(p))
+                {
+                    ret = false;
+                }
+            }
+
+            return ret;
         }
         
         #endregion
