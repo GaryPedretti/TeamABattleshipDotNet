@@ -37,9 +37,9 @@ namespace Battleship.GameController.Contracts
         /// </summary>
         public List<Position> Positions { get; set; }
 
-/// <summary>
-/// Gets or sets the list of hits. Hits should always
-/// </summary>
+        /// <summary>
+        /// Gets or sets the list of hits. Hits should always
+        /// </summary>
         public List<Position> Hits { get; private set; }
 
         /// <summary>
@@ -101,6 +101,12 @@ namespace Battleship.GameController.Contracts
 
             return false;
         }
+
+        public bool IsSunk()
+        {
+            return Hits == Positions;
+        }
+        
         #endregion
     }
 }
