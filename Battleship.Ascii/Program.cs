@@ -10,6 +10,7 @@ namespace Battleship.Ascii
 
     public class Program
     {
+        string tst = "test";
         private static List<Ship> myFleet;
 
         private static List<Ship> enemyFleet;
