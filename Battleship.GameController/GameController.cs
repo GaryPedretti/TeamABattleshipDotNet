@@ -46,7 +46,14 @@ namespace Battleship.GameController
             {
                 if (ship.CheckHit(shot))
                 {
-                    return new Tuple<bool, Ship?>(true, ship);
+                    if (ship.IsSunk())
+                    {
+                        return new Tuple<bool, Ship?>(true, ship);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, Ship?>(true, null);
+                    }
                 }     
             }
 
