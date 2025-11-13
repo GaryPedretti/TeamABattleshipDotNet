@@ -69,6 +69,16 @@ namespace Battleship.GameController
             return true;
         }
 
+        public static IEnumerable<Ship> ListSunkShips(IEnumerable<Ship> ships)
+        {
+            if (ships == null)
+            {
+                throw new ArgumentNullException("ships");
+            }
+
+            return ships.Where(ship => ship.IsSunk());
+        }
+
         /// <summary>
         ///     The initialize ships.
         /// </summary>
