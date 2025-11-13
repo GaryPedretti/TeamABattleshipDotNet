@@ -50,6 +50,25 @@ namespace Battleship.GameController
             return false;
         }
 
+        public static bool CheckAllSunk(IEnumerable<Ship> ships)
+        {
+            if (ships == null)
+            {
+                throw new ArgumentNullException("ships");
+            }
+
+            if (ships.Count() == 0) //if no ships, no ships are sunk
+                return true;
+
+            foreach (var ship in ships)
+            {
+                if (!ship.IsSunk())
+                    return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         ///     The initialize ships.
         /// </summary>
