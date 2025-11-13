@@ -18,7 +18,7 @@
         [TestMethod]
         public void ShouldHitTheShip()
         {
-            var ships = GameController.InitializeShips();
+            var ships = GameController.InitializeShips(false);
 
             var counter = 0;
             foreach (var ship in ships)
@@ -42,7 +42,7 @@
         [TestMethod]
         public void ShouldNotHitTheShip()
         {
-            var ships = GameController.InitializeShips();
+            var ships = GameController.InitializeShips(false);
 
             var counter = 0;
             foreach (var ship in ships)
@@ -67,7 +67,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public void ThrowExceptionIfPositstionIsNull()
         {
-            GameController.CheckIsHit(GameController.InitializeShips(), null);
+            GameController.CheckIsHit(GameController.InitializeShips(false), null);
         }
 
         /// <summary>

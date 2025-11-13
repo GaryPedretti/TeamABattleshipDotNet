@@ -29,7 +29,7 @@
                 { new List<Position> {new Position(Letters.E, 1), new Position(Letters.E, 2)}},
             };
 
-            var ships = GameController.InitializeShips();
+            var ships = GameController.InitializeShips(false);
 
             for (int i = 0; i < 5; i ++)
             {
@@ -67,7 +67,7 @@
                 { new List<Position> {new Position(Letters.E, 1), new Position(Letters.E, 2)}},
             };
 
-            var ships = GameController.InitializeShips();
+            var ships = GameController.InitializeShips(false);
 
             for (int i = 0; i < 5; i++)
             {
@@ -102,7 +102,7 @@
                 { new List<Position> {new Position(Letters.E, 1), new Position(Letters.E, 2)}},
             };
 
-            var ships = GameController.InitializeShips();
+            var ships = GameController.InitializeShips(false);
 
             for (int i = 0; i < 5; i++)
             {
@@ -137,7 +137,7 @@
                 { new List<Position> {new Position(Letters.E, 1), new Position(Letters.E, 2)}},
             };
 
-            var ships = GameController.InitializeShips();
+            var ships = GameController.InitializeShips(false);
 
             for (int i = 0; i < 5; i++)
             {
