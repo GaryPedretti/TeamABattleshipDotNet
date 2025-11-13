@@ -33,7 +33,7 @@
             }
 
             var result = GameController.CheckIsHit(ships, new Position(Letters.A, 1));
-            Assert.IsTrue(result);
+            Assert.IsTrue(result.Item1);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@
             }
 
             var result = GameController.CheckIsHit(ships, new Position(Letters.H, 1));
-            Assert.IsFalse(result);
+            Assert.IsFalse(result.Item1);
         }
 
         /// <summary>

@@ -13,6 +13,7 @@ namespace Battleship.GameController
     /// </summary>
     public class GameController
     {
+
         /// <summary>
         /// Gets or sets the list of misses. 
         /// </summary>
@@ -35,7 +36,7 @@ namespace Battleship.GameController
         ///     or
         ///     shot
         /// </exception>
-        public static bool CheckIsHit(IEnumerable<Ship> ships, Position shot)
+        public static Tuple<bool, Ship?> CheckIsHit(IEnumerable<Ship> ships, Position shot)
         {
             if (ships == null)
             {
@@ -50,11 +51,48 @@ namespace Battleship.GameController
             foreach (var ship in ships)
             {
                 if (ship.CheckHit(shot))
-                    return true;
+                {
+                    if (ship.IsSunk())
+                    {
+                        return new Tuple<bool, Ship?>(true, ship);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, Ship?>(true, null);
+                    }
+                }     
             }
 
+            return new Tuple<bool, Ship?>(false, null);
+        }
 
-            return false;
+        public static bool CheckAllSunk(IEnumerable<Ship> ships)
+        {
+            if (ships == null)
+            {
+                throw new ArgumentNullException("ships");
+            }
+
+            if (ships.Count() == 0) //if no ships, no ships are sunk
+                return true;
+
+            foreach (var ship in ships)
+            {
+                if (!ship.IsSunk())
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static IEnumerable<Ship> ListSunkShips(IEnumerable<Ship> ships)
+        {
+            if (ships == null)
+            {
+                throw new ArgumentNullException("ships");
+            }
+
+            return ships.Where(ship => ship.IsSunk());
         }
 
         /// <summary>
