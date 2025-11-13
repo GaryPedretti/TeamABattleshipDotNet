@@ -108,6 +108,8 @@ namespace Battleship.Ascii
             Console.Clear();
             DrawCanon();
 
+            bool gameIsOver = false;
+
             do
             {
                 Console.WriteLine();
@@ -134,10 +136,20 @@ namespace Battleship.Ascii
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                }    
+                }
 
                 Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
                 Console.ResetColor();
+
+                //check game end
+                if (GameController.CheckAllSunk(enemyFleet))
+                {
+                    Console.WriteLine("You are the winner!");
+                    gameIsOver = true;
+                    continue;
+                }
+
+
                 position = GetRandomPosition();
                 isHit = GameController.CheckIsHit(myFleet, position);
                 telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
@@ -154,8 +166,16 @@ namespace Battleship.Ascii
                 {
                     DrawMiss();
                 }
+
+                //check game end
+                if (GameController.CheckAllSunk(myFleet))
+                {
+                    Console.WriteLine("You lost!");
+                    gameIsOver = true;
+                    continue;
+                }
             }
-            while (true);
+            while (!gameIsOver);
         }
 
 
