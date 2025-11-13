@@ -52,7 +52,6 @@ namespace Battleship.Ascii
                 telemetryClient.TrackException(e);
                 Console.WriteLine("");
                 Console.WriteLine("Error details:");
-                throw new Exception("Fatal error", e);
             }
 
         }
@@ -144,11 +143,12 @@ namespace Battleship.Ascii
                 //check game end
                 if (GameController.CheckAllSunk(enemyFleet))
                 {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("You are the winner!");
+                    Console.ResetColor();
                     gameIsOver = true;
                     continue;
                 }
-
 
                 position = GetRandomPosition();
                 isHit = GameController.CheckIsHit(myFleet, position);
@@ -170,7 +170,9 @@ namespace Battleship.Ascii
                 //check game end
                 if (GameController.CheckAllSunk(myFleet))
                 {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("You lost!");
+                    Console.ResetColor();
                     gameIsOver = true;
                     continue;
                 }
