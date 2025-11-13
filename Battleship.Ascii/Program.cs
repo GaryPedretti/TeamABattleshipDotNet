@@ -176,7 +176,7 @@ namespace Battleship.Ascii
                 Console.WriteLine();
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !" : "missed");
+                Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, hitSunk.Item1 ? "has hit your ship !" : "missed");
                 Console.ResetColor();
                 if (hitSunk.Item1)
                 {
