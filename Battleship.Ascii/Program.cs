@@ -4,6 +4,7 @@ namespace Battleship.Ascii
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Cryptography;
     using Battleship.Ascii.TelemetryClient;
     using Battleship.GameController;
     using Battleship.GameController.Contracts;
@@ -117,9 +118,10 @@ namespace Battleship.Ascii
                 Console.WriteLine("Enter coordinates for your shot :");
                 Console.ResetColor();
                 var position = ParsePosition(Console.ReadLine());
-                var isHit = GameController.CheckIsHit(enemyFleet, position);
-                telemetryClient.TrackEvent("Player_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
-                if (isHit)
+
+                var hitSunk = GameController.CheckIsHit(enemyFleet, position);
+                telemetryClient.TrackEvent("Player_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", hitSunk.Item1.ToString() } });
+                if (hitSunk.Item1)
                 {
                     DrawHit();
                 }
@@ -128,7 +130,7 @@ namespace Battleship.Ascii
                     DrawMiss();
                 }
 
-                if(isHit)
+                if(hitSunk.Item1)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
                 }
@@ -137,8 +139,26 @@ namespace Battleship.Ascii
                     Console.ForegroundColor = ConsoleColor.Green;
                 }
 
-                Console.WriteLine(isHit ? "Yeah ! Nice hit !" : "Miss");
+                Console.WriteLine(hitSunk.Item1 ? "Yeah ! Nice hit !" : "Miss");
                 Console.ResetColor();
+
+                if (hitSunk.Item2 is not null) //if sunk a ship
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("{0} was sunk!", hitSunk.Item2.Name);
+                    Console.ResetColor();
+                }
+
+                //list sunk ships
+                var sunkEnemyShips = GameController.ListSunkShips(enemyFleet);
+                if (sunkEnemyShips.Count() > 0)
+                {
+                    Console.WriteLine("Sunk ships:");
+                    foreach (var ship in sunkEnemyShips)
+                    {
+                        Console.WriteLine("\t{0}", ship.Name);
+                    }
+                }
 
                 //check game end
                 if (GameController.CheckAllSunk(enemyFleet))
@@ -151,20 +171,27 @@ namespace Battleship.Ascii
                 }
 
                 position = GetRandomPosition();
-                isHit = GameController.CheckIsHit(myFleet, position);
-                telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", isHit.ToString() } });
+                hitSunk = GameController.CheckIsHit(myFleet, position);
+                telemetryClient.TrackEvent("Computer_ShootPosition", new Dictionary<string, string>() { { "Position", position.ToString() }, { "IsHit", hitSunk.Item1.ToString() } });
                 Console.WriteLine();
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Computer shot in {0}{1} and {2}", position.Column, position.Row, isHit ? "has hit your ship !" : "missed");
                 Console.ResetColor();
-                if (isHit)
+                if (hitSunk.Item1)
                 {
                     DrawHit();
                 }
                 else
                 {
                     DrawMiss();
+                }
+
+                if (hitSunk.Item2 is not null) //if sunk a ship
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("{0} was sunk!", hitSunk.Item2.Name);
+                    Console.ResetColor();
                 }
 
                 //check game end

@@ -12,6 +12,7 @@ namespace Battleship.GameController
     /// </summary>
     public class GameController
     {
+
         /// <summary>
         /// Checks the is hit.
         /// </summary>
@@ -29,7 +30,7 @@ namespace Battleship.GameController
         ///     or
         ///     shot
         /// </exception>
-        public static bool CheckIsHit(IEnumerable<Ship> ships, Position shot)
+        public static Tuple<bool, Ship?> CheckIsHit(IEnumerable<Ship> ships, Position shot)
         {
             if (ships == null)
             {
@@ -44,10 +45,12 @@ namespace Battleship.GameController
             foreach (var ship in ships)
             {
                 if (ship.CheckHit(shot))
-                    return true;
+                {
+                    return new Tuple<bool, Ship?>(true, ship);
+                }     
             }
 
-            return false;
+            return new Tuple<bool, Ship?>(false, null);
         }
 
         public static bool CheckAllSunk(IEnumerable<Ship> ships)
