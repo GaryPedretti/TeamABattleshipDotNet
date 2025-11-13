@@ -1,13 +1,13 @@
 ﻿
 namespace Battleship.Ascii
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Cryptography;
     using Battleship.Ascii.TelemetryClient;
     using Battleship.GameController;
     using Battleship.GameController.Contracts;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Metrics;
+    using System.Linq;
 
     public class Program
     {
@@ -15,13 +15,45 @@ namespace Battleship.Ascii
 
         private static List<Ship> enemyFleet;
 
+        /// <summary>
+        /// my missed for gameboard view
+        /// </summary>
+        private static List<Position> myMisses;
+
+        /// <summary>
+        /// enemy missed for gameboard view
+        /// </summary>
+        private static List<Position> enemyMisses;
+
+        /// <summary>
+        /// satellite view - allows you to see enemy ships
+        /// </summary>
+        private static bool satellite = false;
+
+        /// <summary>
+        /// baby fleet mode - only one ship on the board for each player
+        /// </summary>
+        private static bool babyFleet = false;
+
         private static ITelemetryClient telemetryClient;
 
-        static void Main()
+        static void Main(string[] args)
         {
+
+            //satellite mode
+            if (args.Contains("/satellite"))
+            {
+                satellite = true;
+            }
+
+            //baby flet mode
+            if (args.Contains("/babyfleet"))
+            {
+                babyFleet = true;
+            }
+
             telemetryClient = new ApplicationInsightsTelemetryClient();
             telemetryClient.TrackEvent("ApplicationStarted", new Dictionary<string, string> { { "Technology", ".NET" } });
-
             try
             {
                 Console.Title = "Battleship";
@@ -42,6 +74,7 @@ namespace Battleship.Ascii
                 Console.WriteLine(@"|                        Welcome to Battleship                         BB-61/");
                 Console.WriteLine(@" \_________________________________________________________________________|");
                 Console.WriteLine();
+
 
                 InitializeGame();
 
@@ -112,6 +145,8 @@ namespace Battleship.Ascii
 
             do
             {
+                PrintComputerGameBoard();
+                PrintPlayerGameBoard();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Player, it's your turn");
@@ -127,6 +162,7 @@ namespace Battleship.Ascii
                 }
                 else
                 {
+                    myMisses.Add(position);
                     DrawMiss();
                 }
 
@@ -184,6 +220,7 @@ namespace Battleship.Ascii
                 }
                 else
                 {
+                    enemyMisses.Add(position);
                     DrawMiss();
                 }
 
@@ -229,6 +266,9 @@ namespace Battleship.Ascii
 
         private static void InitializeGame()
         {
+            myMisses = new List<Position>();
+            enemyMisses = new List<Position>();
+
             InitializeMyFleet();
 
             InitializeEnemyFleet();
@@ -236,23 +276,28 @@ namespace Battleship.Ascii
 
         private static void InitializeMyFleet()
         {
-            myFleet = GameController.InitializeShips().ToList();
+            myFleet = GameController.InitializeShips(babyFleet).ToList();
+
+            PrintGameboardInstructions();
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
             foreach (var ship in myFleet)
             {
+                PrintPlayerGameBoard();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Please enter the positions for the {0} (size: {1})", ship.Name, ship.Size);
                 for (var i = 1; i <= ship.Size; i++)
                 {
+
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine("Enter position {0} of {1} (i.e A3):", i, ship.Size);
                     Console.ResetColor();
                     var position = Console.ReadLine();
                     ship.AddPosition(position);
+                    PrintPlayerGameBoard();
                     telemetryClient.TrackEvent("Player_PlaceShipPosition", new Dictionary<string, string>() { { "Position", position }, { "Ship", ship.Name }, { "PositionInShip", i.ToString() } });
                 }
             }
@@ -261,29 +306,162 @@ namespace Battleship.Ascii
 
         private static void InitializeEnemyFleet()
         {
-            enemyFleet = GameController.InitializeShips().ToList();
+            enemyFleet = GameController.InitializeShips(babyFleet).ToList();
+            if (babyFleet)
+            {
+                
+                enemyFleet[0].Positions.Add(new Position { Column = Letters.C, Row = 5 });
+                enemyFleet[0].Positions.Add(new Position { Column = Letters.C, Row = 6 });
+            }
+            else
+            {
+                enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 4 });
+                enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 5 });
+                enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 6 });
+                enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 7 });
+                enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 8 });
 
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 4 });
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 5 });
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 6 });
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 7 });
-            enemyFleet[0].Positions.Add(new Position { Column = Letters.B, Row = 8 });
+                enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 6 });
+                enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 7 });
+                enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 8 });
+                enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 9 });
 
-            enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 6 });
-            enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 7 });
-            enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 8 });
-            enemyFleet[1].Positions.Add(new Position { Column = Letters.E, Row = 9 });
+                enemyFleet[2].Positions.Add(new Position { Column = Letters.A, Row = 3 });
+                enemyFleet[2].Positions.Add(new Position { Column = Letters.B, Row = 3 });
+                enemyFleet[2].Positions.Add(new Position { Column = Letters.C, Row = 3 });
 
-            enemyFleet[2].Positions.Add(new Position { Column = Letters.A, Row = 3 });
-            enemyFleet[2].Positions.Add(new Position { Column = Letters.B, Row = 3 });
-            enemyFleet[2].Positions.Add(new Position { Column = Letters.C, Row = 3 });
+                enemyFleet[3].Positions.Add(new Position { Column = Letters.F, Row = 8 });
+                enemyFleet[3].Positions.Add(new Position { Column = Letters.G, Row = 8 });
+                enemyFleet[3].Positions.Add(new Position { Column = Letters.H, Row = 8 });
 
-            enemyFleet[3].Positions.Add(new Position { Column = Letters.F, Row = 8 });
-            enemyFleet[3].Positions.Add(new Position { Column = Letters.G, Row = 8 });
-            enemyFleet[3].Positions.Add(new Position { Column = Letters.H, Row = 8 });
+                enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
+                enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
+            }
+        }
 
-            enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 5 });
-            enemyFleet[4].Positions.Add(new Position { Column = Letters.C, Row = 6 });
+        /// <summary>
+        /// prints game board key so user knows what they are looking at
+        /// </summary>
+        private static void PrintGameboardInstructions()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("___________________________________________________________________________________");
+            Console.WriteLine("The gameboard(s) below show the playing fields, hits, misses, and ships positions.");
+
+            Console.Write("Untouched water will show as ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("~");
+            Console.ResetColor();
+
+            Console.Write("Hits will show as ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("X");
+            Console.ResetColor();
+
+            Console.Write("Misses will show as ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("X");
+            Console.ResetColor();
+
+
+            Console.Write("Ship positions will show as ");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write("V ");
+            Console.ResetColor();
+            Console.WriteLine("(You can only see your own ship positions.");
+            Console.WriteLine("The enemy ship positions that have not been hit will show as untouched water)");
+            Console.WriteLine("___________________________________________________________________________________");
+            Console.WriteLine("");
+
+        }
+
+        /// <summary>
+        /// prints enemy board
+        /// </summary>
+        private static void PrintComputerGameBoard()
+        {
+            Console.Write("***ENEMY GAMEBOARD***");
+
+            List<Position> computerShipPos = new List<Position>();
+            List<Position> ComputerHitPos = new List<Position>();
+
+            foreach (Ship myShip in enemyFleet)
+            {
+                if (satellite)
+                {
+                    computerShipPos.AddRange(myShip.Positions);
+                }
+                ComputerHitPos.AddRange(myShip.Hits);
+            }
+
+
+            PrintGameBoard(ComputerHitPos, computerShipPos, myMisses);
+        }
+
+        /// <summary>
+        /// prints player board
+        /// </summary>
+        private static void PrintPlayerGameBoard()
+        {
+            Console.Write("***YOUR GAMEBOARD***");
+
+            List<Position> myShipPos = new List<Position>();
+            List<Position> myHitPos = new List<Position>();
+
+            foreach (Ship myShip in myFleet)
+            {
+                myShipPos.AddRange(myShip.Positions);
+                myHitPos.AddRange(myShip.Hits);
+            }
+
+            PrintGameBoard(myHitPos, myShipPos, enemyMisses);
+        }
+
+        /// <summary>
+        /// prints game board
+        /// </summary>
+        /// <param name="hitPositions">posistions that are hits and will show in red X's</param>
+        /// <param name="boatPositions">posistions that are boats and will show in gray V's</param>
+        /// <param name="missPositions">posistions that are misses and will show in blue X's</param>
+        private static void PrintGameBoard(List<Position> hitPositions, List<Position> boatPositions, List<Position> missPositions)
+        {
+            Console.ResetColor();
+            Console.WriteLine();
+            Console.WriteLine("  A B C D E F G H");
+
+            for (int i = 1; i <= 8; i++)
+
+            {
+                Console.Write(i.ToString() + " ");
+                for (char c = 'A'; c <= 'H'; c++)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    string output = "~ ";
+                    Position testPos = ParsePosition(c + i.ToString());
+
+                    if (hitPositions.Contains(testPos))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        output = "X ";
+                    }
+                    else if (boatPositions.Contains(testPos))
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        output = "V ";
+                    }
+                    else if (missPositions.Contains(testPos))
+                    {
+                        output = "X ";
+                    }
+
+                    Console.Write(output);
+                    Console.ResetColor();
+                }
+                Console.WriteLine("");
+                Console.ResetColor();
+            }
+
+            Console.ResetColor();
         }
     }
 }

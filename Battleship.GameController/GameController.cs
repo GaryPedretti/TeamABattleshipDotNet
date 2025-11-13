@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿
+using System.Linq;
 
 namespace Battleship.GameController
 {
@@ -12,6 +13,11 @@ namespace Battleship.GameController
     /// </summary>
     public class GameController
     {
+
+        /// <summary>
+        /// Gets or sets the list of misses. 
+        /// </summary>
+        public List<Position> misses = new List<Position>();
 
         /// <summary>
         /// Checks the is hit.
@@ -92,19 +98,27 @@ namespace Battleship.GameController
         /// <summary>
         ///     The initialize ships.
         /// </summary>
+        /// <param name="babyFleet">
+        /// creates a fleet of one ship.
+        /// </param>
         /// <returns>
         ///     The <see cref="IEnumerable" />.
         /// </returns>
-        public static IEnumerable<Ship> InitializeShips()
+        public static IEnumerable<Ship> InitializeShips(bool babyFleet)
         {
-            return new List<Ship>()
-                       {
-                           new Ship() { Name = "Aircraft Carrier", Size = 5, Color = ConsoleColor.Blue }, 
-                           new Ship() { Name = "Battleship", Size = 4, Color = ConsoleColor.Red }, 
-                           new Ship() { Name = "Submarine", Size = 3, Color = ConsoleColor.Gray }, 
-                           new Ship() { Name = "Destroyer", Size = 3, Color = ConsoleColor.Yellow }, 
-                           new Ship() { Name = "Patrol Boat", Size = 2, Color = ConsoleColor.Green }
-                       };
+            List<Ship> fleet = new List<Ship>();
+
+            if (!babyFleet)
+            {
+                fleet.Add(new Ship() { Name = "Aircraft Carrier", Size = 5, Color = ConsoleColor.Blue });
+                fleet.Add(new Ship() { Name = "Battleship", Size = 4, Color = ConsoleColor.Red });
+                fleet.Add(new Ship() { Name = "Submarine", Size = 3, Color = ConsoleColor.Gray });
+                fleet.Add(new Ship() { Name = "Destroyer", Size = 3, Color = ConsoleColor.Yellow });
+            }
+
+            fleet.Add(new Ship() { Name = "Patrol Boat", Size = 2, Color = ConsoleColor.Green });
+
+            return fleet;
         }
 
         /// <summary>
@@ -129,5 +143,5 @@ namespace Battleship.GameController
             var position = new Position(letter, number);
             return position;
         }
-     }
+    }
 }
